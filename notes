@@ -1,0 +1,101 @@
+When you create a Custom Resource Definition (CRD) in Kubernetes, the API server dynamically creates new RESTful endpoints to manage your custom resources.
+
+API registration is the process by which Kubernetes makes API endpoints available to clients. It's a fundamental mechanism that enables both built-in resources and custom extensions to be exposed through the Kubernetes API server.
+
+Types of API Registration in Kubernetes
+Built-in API Registration:
+
+Core Kubernetes APIs (like Pods, Services) are registered at startup
+
+These use API groups like api/v1 (core group) or apps/v1
+
+Custom API Registration:
+
+CRDs (Custom Resource Definitions) register new API endpoints
+
+API aggregation layers can register additional API groups
+The API server:
+
+Validates the CRD schema
+
+Creates new RESTful endpoints in the API server
+
+Configures storage in etcd for the new resource type
+
+Updates discovery information so clients can find the new API
+
+kubectl api-resources
+
+A Controller/Operator:
+
+A running program that watches CronTab objects
+
+Takes action when they're created/updated
+
+
+https://youtu.be/sF2Z8IDshRA?si=zdoCzDAz3rRkOjhY
+https://github.com/wardviaene/golang-demos
+
+https://www.youtube.com/watch?v=LBZY9SkUgQE&t=28s
+
+https://book.kubebuilder.io/
+
+https://www.youtube.com/watch?v=azJsyLjvHsI >>good good
+https://killercoda.com/aghilish/scenario/extending_k8s
+
+
+installtion(in k8 ablsulte begginer lab-alphine)
+===============
+# Update package index
+sudo apk update
+
+# Install Go
+sudo apk add go
+
+# Verify installation
+go version
+
+
+kubectl proxy --port=8080
+
+kubectl -n kube-system logs -f kube-apiserver-controlplane | grep example.com
+
+# List all available API groups
+curl http://localhost:8080/apis/
+
+# Check specifically for your API group
+curl http://localhost:8080/apis/stable.example.com/v1
+
+# List CronTab resources in all namespaces
+curl http://localhost:8080/apis/stable.example.com/v1/crontabs
+
+# List CronTab resources in a specific namespace
+curl http://localhost:8080/apis/stable.example.com/v1/namespaces/<namespace>/crontabs
+
+
+# Check the API group
+kubectl get --raw /apis/stable.example.com/v1
+
+# List CronTab resources
+kubectl get --raw /apis/stable.example.com/v1/crontabs
+
+# For a specific namespace
+kubectl get --raw /apis/stable.example.com/v1/namespaces/<namespace>/crontabs
+
+When you create a Custom Resource Definition (CRD) in Kubernetes, the API server dynamically creates new RESTful endpoints to manage your custom resources
+How Kubernetes Implements This
+API Aggregation Layer: The API server has a modular architecture that can dynamically add new API groups
+
+Storage Backend: Kubernetes uses etcd to store all resources, including your custom resources
+
+Request Handling:
+
+Request comes to API server
+
+API server checks registered API groups
+
+Routes to appropriate handler
+
+Validates against your CRD schema
+
+Stores in etcd
